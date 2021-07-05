@@ -12,7 +12,7 @@ namespace Dialog
     /// <summary>
     /// Класс нахождения критического пути.
     /// </summary>
-    class CriticalPath
+    public class CriticalPath
     {
         string readPath;
         string savePath;
@@ -21,12 +21,12 @@ namespace Dialog
         List<Path> pathes = new List<Path>(); //Список путей
 
 
-        struct Path
+        public struct Path
         {
             public string path, lastPoint;
             public int length;
         }
-        struct Work
+        public struct Work
         {
             public string start, eventEnd;
             public int time;
@@ -103,7 +103,7 @@ namespace Dialog
         /// <summary>
         /// Метод подсчета путей.
         /// </summary>
-        void CalculatingPaths()
+        public void CalculatingPaths()
         {
             Debug.WriteLine("Пути: ");
             foreach (Work activity in work.Where(x => x.start == StartingPoint())) //Сначала в список путей заносятся все начальные точки
@@ -125,7 +125,7 @@ namespace Dialog
         /// Метод поиска критического пути.
         /// </summary>
         /// <returns></returns>
-        List<Path> FindCriticalPath()
+        public List<Path> FindCriticalPath()
         {
             int maxLength = 0;
             string endPos = EndPoint();
@@ -145,7 +145,7 @@ namespace Dialog
         /// <summary>
         /// Метод считывания данных из файла.
         /// </summary>
-        void ReadData()
+        public void ReadData()
         {
             if (!File.Exists(readPath))
             {
@@ -172,7 +172,7 @@ namespace Dialog
         /// Метод записи в файл.
         /// </summary>
         /// <param name="savingPath"></param>
-        void WriteToFile(List<Path> savingPath)
+        public void WriteToFile(List<Path> savingPath)
         {
             if (!File.Exists(savePath)) File.Create(savePath).Close();
             try
