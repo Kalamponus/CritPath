@@ -25,5 +25,13 @@ namespace CritPathTest
             var testing = criticalPath.FindCriticalPath();
             Assert.AreEqual(testing[0].length, pathlen);
         }
+        [TestMethod]
+        public void CriticalPathTesting()
+        {
+            criticalPath.ReadData();
+            criticalPath.CalculatingPaths();
+            var testing = criticalPath.FindCriticalPath();
+            Assert.IsNotNull(testing[0].path);
+        }
     }
 }
