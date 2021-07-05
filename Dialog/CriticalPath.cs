@@ -28,7 +28,7 @@ namespace Dialog
         }
         public struct Work
         {
-            public string start, eventEnd;
+            public string start, workEnd;
             public int time;
         }
         /// <summary>
@@ -50,7 +50,7 @@ namespace Dialog
             int countCheck = 0;
             foreach (Work activity in work)   //Проверка, есть ли путь к точке из других точек. Если нет, то это начало.
             {
-                if (work.Where(x => x.eventEnd == activity.start).Count() == 0)
+                if (work.Where(x => x.workEnd == activity.start).Count() == 0)
                 {
                     tempStartPos = activity.start;
                     countCheck++;
@@ -80,16 +80,16 @@ namespace Dialog
             int count = 0;
             foreach (Work activity in work)   //Проверка, исходят ли из этой точки другие дуги
             {
-                if (work.Where(x => x.start == activity.eventEnd).Count() == 0)
+                if (work.Where(x => x.start == activity.workEnd).Count() == 0)
                 {
-                    tempEndPos = activity.eventEnd;
+                    tempEndPos = activity.workEnd;
                     count++;
-                    if (count > 1 && lastPoint != activity.eventEnd)
+                    if (count > 1 && lastPoint != activity.workEnd)
                     {
                         MessageBox.Show("Найдено несколько конечных точек, решить задачу невозможно.");
                         Environment.Exit(0);
                     }
-                    lastPoint = activity.eventEnd;
+                    lastPoint = activity.workEnd;
                 }
             }
             if (count == 0)
@@ -108,13 +108,13 @@ namespace Dialog
             Debug.WriteLine("Пути: ");
             foreach (Work activity in work.Where(x => x.start == StartingPoint())) //Сначала в список путей заносятся все начальные точки
             {
-                pathes.Add(new Path { path = activity.start + "-" + activity.eventEnd, lastPoint = activity.eventEnd, length = activity.time });
+                pathes.Add(new Path { path = activity.start + "-" + activity.workEnd, lastPoint = activity.workEnd, length = activity.time });
             }
             for (int i = 0; i < pathes.Count; i++) //Проверка всех записанных путей
             {
                 foreach (Work activity in work.Where(x => x.start == pathes[i].lastPoint)) //Добавление путей, которые начинаются в проверяемом 
                 {
-                    pathes.Add(new Path { path = pathes[i].path + "-" + activity.eventEnd, lastPoint = activity.eventEnd, length = pathes[i].length + activity.time });                   
+                    pathes.Add(new Path { path = pathes[i].path + "-" + activity.workEnd, lastPoint = activity.workEnd, length = pathes[i].length + activity.time });                   
                 }
             }
 
@@ -158,7 +158,7 @@ namespace Dialog
                 foreach (var line in lines)
                 {
                     string[] str = line.Split(';');
-                    work.Add(new Work { start = str[0], eventEnd = str[1], time = Convert.ToInt32(str[2]) });
+                    work.Add(new Work { start = str[0], workEnd = str[1], time = Convert.ToInt32(str[2]) });
                 }
             }
             catch
