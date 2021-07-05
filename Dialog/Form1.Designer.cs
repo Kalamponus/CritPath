@@ -67,7 +67,7 @@ namespace Dialog
             this.Controls.Add(this.buttonMakeSolutionAndSave);
             this.Controls.Add(this.buttonDownload);
             this.Name = "Form1";
-            this.Text = "Приветствую";
+            this.Text = "Нахождение крит. пути";
             this.ResumeLayout(false);
 
         }
