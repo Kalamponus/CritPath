@@ -55,12 +55,8 @@ namespace Dialog
                     string path = saveFileDialog1.FileName;
                     if (path != null && path != "")
                     {
-                        //CriticalPath cp = new CriticalPath(dataPath, path);
-                        //cp.CalculateCriticalPath();
-                        //MinimalPath mp = new MinimalPath(dataPath, path);
-                        //mp.CalculateMinimalPath();
-                        JohnsonMethod jm = new JohnsonMethod(dataPath, path);
-                        jm.Calculate();
+                        CriticalPath cp = new CriticalPath(dataPath, path);
+                        cp.CalculateCriticalPath();
                         MessageBox.Show("Решение сохранено!");
                         Environment.Exit(0);
                     }
