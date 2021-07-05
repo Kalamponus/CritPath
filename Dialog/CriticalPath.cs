@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Dialog
 {
@@ -18,6 +19,7 @@ namespace Dialog
 
         List<Work> work = new List<Work>(); //Список всех работ
         List<Path> pathes = new List<Path>(); //Список путей
+
 
         struct Path
         {
@@ -42,11 +44,11 @@ namespace Dialog
         /// Метод поиска начальной точки.
         /// </summary>
         /// <returns></returns>
-        string StartingPoint() //Метод для поиска начальной точки
+        string StartingPoint() 
         {
             string tempStartPos = " ", lastPoint = "";
             int countCheck = 0;
-            foreach (Work activity in work)   //Проверка, есть ли путь к точке из других точек. Если нет, то это начало/
+            foreach (Work activity in work)   //Проверка, есть ли путь к точке из других точек. Если нет, то это начало.
             {
                 if (work.Where(x => x.eventEnd == activity.start).Count() == 0)
                 {
@@ -101,9 +103,10 @@ namespace Dialog
         /// <summary>
         /// Метод подсчета путей.
         /// </summary>
-        void FindingPath()
+        void CalculatingPaths()
         {
-            foreach (Work activity in work.Where(x => x.start == StartingPoint())) //Сначала в список путей заносятся все начальные дуги
+            Debug.WriteLine("Пути: ");
+            foreach (Work activity in work.Where(x => x.start == StartingPoint())) //Сначала в список путей заносятся все начальные точки
             {
                 pathes.Add(new Path { path = activity.start + "-" + activity.eventEnd, lastPoint = activity.eventEnd, length = activity.time });
             }
@@ -111,10 +114,11 @@ namespace Dialog
             {
                 foreach (Work activity in work.Where(x => x.start == pathes[i].lastPoint)) //Добавление путей, которые начинаются в проверяемом 
                 {
-                    
-                    pathes.Add(new Path { path = pathes[i].path + "-" + activity.eventEnd, lastPoint = activity.eventEnd, length = pathes[i].length + activity.time });
+                    pathes.Add(new Path { path = pathes[i].path + "-" + activity.eventEnd, lastPoint = activity.eventEnd, length = pathes[i].length + activity.time });                   
                 }
             }
+
+            foreach(var p in pathes) Debug.WriteLine(p.path);
         }
 
         /// <summary>
@@ -134,7 +138,9 @@ namespace Dialog
             {
                 criticalPath.Add(path);
             }
-            return criticalPath;
+            
+
+            return criticalPath;          
         }
         /// <summary>
         /// Метод считывания данных из файла.
@@ -175,6 +181,7 @@ namespace Dialog
                 {
                     if (savingPath.Count == 1)
                     {
+                        Debug.WriteLine("Крит. путь - "+ savingPath[0].path);
                         sw.WriteLine("Критический путь:");
                         sw.WriteLine(savingPath[0].path);
                         sw.WriteLine("Длина пути: " + savingPath[0].length);
@@ -182,8 +189,12 @@ namespace Dialog
                     else
                     {
                         sw.WriteLine("Найденные критические пути:");
-                        foreach (Path savPath in savingPath)
-                            sw.WriteLine(savPath.path);
+                        foreach (Path savePaths in savingPath)
+                        {
+                            Debug.WriteLine("Крит. путь - " + savePaths.path);
+                            sw.WriteLine(savePaths.path);
+                        }
+                        Debug.WriteLine("Длина путей: " + savingPath[0].length);
                         sw.WriteLine("Длина путей: " + savingPath[0].length);
                     }
                 }
@@ -200,8 +211,11 @@ namespace Dialog
         /// </summary>
         public void CalculateCriticalPath()
         {
+            //Debug.Listeners.Add(new TextWriterTraceListener(Console.Out));
+            Debug.Listeners.Add(new TextWriterTraceListener(File.CreateText("log.txt")));
+            Debug.AutoFlush = true;
             ReadData();
-            FindingPath();
+            CalculatingPaths();
             var criticalPath = FindCriticalPath();
             WriteToFile(criticalPath);
         }
